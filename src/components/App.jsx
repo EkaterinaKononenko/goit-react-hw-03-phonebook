@@ -6,7 +6,7 @@ import { Container, PhoneTitle, ContactTitle, IconWrapper } from './App.styled';
 import { AiOutlineApple } from 'react-icons/ai';
 import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 
-class App extends Component {
+export class App extends Component {
   state = {
     contacts: [
       { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
@@ -35,6 +35,20 @@ class App extends Component {
     );
   };
 
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
   render() {
     const { contacts, filter } = this.state;
     const contactAfterFilter = contacts.filter(contact =>
@@ -61,5 +75,3 @@ class App extends Component {
     );
   }
 }
-
-export { App };
